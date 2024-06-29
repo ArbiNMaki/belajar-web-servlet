@@ -48,7 +48,19 @@ public class FormUploadServlet extends HttpServlet {
         Path uploadLocation = uploadDir.resolve(UUID.randomUUID().toString() + profile.getSubmittedFileName());
         Files.copy(profile.getInputStream(), uploadLocation);
 
-        resp.getWriter().println("Hello " + name  + ", your profile saved in " + uploadLocation.toAbsolutePath());
+        String html = """
+                <html>
+                <body>
+                Name : $name
+                <br>
+                Profile : <img width="400px" height="400px" src="/download?file=$profile" />
+                </body>
+                <html>
+                """
+                .replace("$name", name)
+                .replace("$profile", uploadLocation.getFileName().toString());
+
+        resp.getWriter().println(html);
     }
 
 }
